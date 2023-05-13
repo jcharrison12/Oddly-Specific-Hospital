@@ -37,7 +37,14 @@ public class BasicInkExample : MonoBehaviour {
 			// Display the text on screen!
 			CreateContentView(text);
 		}
-
+		if (story.currentTags.Count > 0)
+		{
+			for (int i = 0; i < story.currentTags.Count; i++)
+			{
+				string tag = story.currentTags[i];
+				Image img = CreatePortraitView(tag);
+			}
+		}
 		// Display all the choices, if there are any!
 		if(story.currentChoices.Count > 0) {
 			for (int i = 0; i < story.currentChoices.Count; i++) {
@@ -68,15 +75,22 @@ public class BasicInkExample : MonoBehaviour {
 	void CreateContentView (string text) {
 		Text storyText = Instantiate (textPrefab) as Text;
 		storyText.text = text;
-		storyText.transform.SetParent (panel.transform, false);
+		storyText.transform.SetParent (panel1.transform, false);
 
+	}
+	Image CreatePortraitView (string text)
+	{
+		Image portrait = Instantiate(portraitPrefab) as Image;
+		portrait.transform.SetParent(panel2.transform, false);
+		portrait.sprite = Resources.Load<Sprite>(text);
+		return portrait;
 	}
 
 	// Creates a button showing the choice text
 	Button CreateChoiceView (string text) {
 		// Creates the button from a prefab
 		Button choice = Instantiate (buttonPrefab) as Button;
-		choice.transform.SetParent (panel.transform, false);
+		choice.transform.SetParent (panel1.transform, false);
 		
 		// Gets the text from the button prefab
 		Text choiceText = choice.GetComponentInChildren<Text> ();
@@ -91,24 +105,34 @@ public class BasicInkExample : MonoBehaviour {
 
 	// Destroys all the children of this gameobject (all the UI)
 	void RemoveChildren () {
-		int childCount = panel.transform.childCount;
+		int childCount = panel1.transform.childCount;
 		for (int i = childCount - 1; i >= 0; --i) {
-			GameObject.Destroy (panel.transform.GetChild (i).gameObject);
+			GameObject.Destroy (panel1.transform.GetChild (i).gameObject);
 		}
-	}
+        int childCount2 = panel2.transform.childCount;
+        for (int i = childCount2 - 1; i >= 0; --i)
+        {
+            GameObject.Destroy(panel2.transform.GetChild(i).gameObject);
+        }
+    }
 
 	[SerializeField]
 	private TextAsset inkJSONAsset = null;
 	public Story story;
 
 	[SerializeField]
-	private GameObject panel = null;
+	private GameObject panel1 = null;
+    [SerializeField]
+    private GameObject panel2 = null;
 
-	// UI Prefabs
-	[SerializeField]
+
+    // UI Prefabs
+    [SerializeField]
 	private Text textPrefab = null;
 	[SerializeField]
 	private Button buttonPrefab = null;
+    [SerializeField]
+    private Image portraitPrefab = null;
     [SerializeField]
     private GameObject backgroundPrefab = null;
 }
