@@ -7,19 +7,26 @@ VAR industry = "real estate"
 VAR checkpoint1 = false
 VAR checkpoint2 = false
 
-Your name is Jonathan and you are the star of the scrappy up-and-coming soap opera, "Oddly Specific Hospital." #doctor-happy
+EXTERNAL ShowCharacter(characterName, position, mood)
+
+EXTERNAL HideCharacter(characterName)
+
+EXTERNAL ChangeMood(characterName, mood)
+
+{ShowCharacter("Doctor", "Center", "Happy")}
+Your name is Jonathan and you are the star of the scrappy up-and-coming soap opera, "Oddly Specific Hospital." 
 * [Continue]
 -> memory
 
 === memory ===
 But ever since you hit your head rather hard one day, you've had short term memory loss and you can never remember your lines.
-"Remember, we're short on budget so we only get one take, so don't screw it up!" barks the director. #director-neutral
+"Remember, we're short on budget so we only get one take, so don't screw it up!" barks the director. {ShowCharacter("Director", "Left", "Angry")}
 * [Let's go!]
 -> scene1
 
 === scene1 ===
 The episode begins. Mr. and Mrs. Harrison check into the hospital. Carmella Harrison is going into labor and you are going to deliver her baby.
-"Action!" yells the director.
+"Action!" yells the director. {ChangeMood("Director", "Dramatic")} {ShowCharacter("Carmella", "Right", "Happy")}
 "Oh, look, there's Dr. G, dear," says Carmella. "Dr. G! I'm ready to have my baby!" She seems remarkably calm for her situation. #carmella-happy
 * "Mrs. Carmella, good to see you. That's what I like to hear." 
 ->prep
