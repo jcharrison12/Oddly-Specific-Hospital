@@ -8,10 +8,12 @@ using Ink.Parsed;
 public class BasicInkExample : MonoBehaviour {
     public static event Action<Ink.Runtime.Story> OnCreateStory;
     private CharacterManager _characterManager;
+	private SoundManager _soundManager;
 
     void Awake () {
         // Remove the default message
         _characterManager = FindObjectOfType<CharacterManager>();
+        _soundManager = FindObjectOfType<SoundManager>();
         RemoveChildren();
 		StartStory();
 	}
@@ -29,6 +31,8 @@ public class BasicInkExample : MonoBehaviour {
 
         story.BindExternalFunction("ChangeMood",
             (string name, string mood) => _characterManager.ChangeMood(name, mood));
+		story.BindExternalFunction("PlaySound",
+			(string soundname) => _soundManager.PlaySound(soundname));
 
         RefreshView();
 	}

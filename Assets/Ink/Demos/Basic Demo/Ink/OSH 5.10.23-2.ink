@@ -6,12 +6,18 @@ VAR priscilla_is_nurse = true
 VAR industry = "real estate"
 VAR checkpoint1 = false
 VAR checkpoint2 = false
-
+VAR comedy = 0
+VAR tragedy = 0 
+VAR anger = 0
 EXTERNAL ShowCharacter(characterName, position, mood)
 
 EXTERNAL HideCharacter(characterName)
 
 EXTERNAL ChangeMood(characterName, mood)
+
+EXTERNAL PlaySound(soundname)
+
+EXTERNAL PlayMusic(musicname)
 
 {ShowCharacter("Doctor", "Center", "Happy")}
 Your name is Jonathan and you are the star of the scrappy up-and-coming soap opera, "Oddly Specific Hospital." 
@@ -20,6 +26,7 @@ Your name is Jonathan and you are the star of the scrappy up-and-coming soap ope
 
 === memory ===
 But ever since you hit your head rather hard one day, you've had short term memory loss and you can never remember your lines.
+{PlaySound("SFX bonk")}
 "Remember, we're short on budget so we only get one take, so don't screw it up!" barks the director. {ShowCharacter("Director", "Left", "Angry")}
 * [Let's go!]
 -> scene1
@@ -37,6 +44,7 @@ The episode begins. Mr. and Mrs. Harrison check into the hospital. Carmella Harr
 -> hates_children
 
 === prep ===
+{HideCharacter("Director")}
 "Excellent! Oh I do hope this baby is an easy one. Would you please show me to my hospital room? #carmella-happy
 "Absolutely." You guide her to her room in the maternity ward. #doctor-neutral
 * [Continue]
@@ -57,7 +65,8 @@ Angela, Carmella's actress, glares at you. This was probably not what you were s
 
 "No, doctor, I'm definitely due."
 
-You grab a random clipboard, pretend to read it, and say, "Oh yes, right, I'm thinking of Carmella...Hendrickson. You're right on time." You chuck the clipboard aside and hit an orderly. #doctor-embarrassed
+{PlaySound("clipboard")} 
+You grab a random clipboard, pretend to read it, and say, "Oh yes, right, I'm thinking of Carmella...Hendrickson. You're right on time." You chuck the clipboard aside and hit an orderly. #doctor-embarrassed 
 
 * [Continue] -> prep
 
@@ -105,8 +114,8 @@ You nod.
 ->END
 
 === nurse_priscilla ===
-"That's me," Priscilla rasps, clearly a smoker. "Let's get you set up with your epidural, dearie." #priscilla-neutral
-David, whose actor is also named David, pulls you aside. #david-neutral
+"That's me," Priscilla rasps, clearly a smoker. "Let's get you set up with your epidural, dearie." 
+David, whose actor is also named David, pulls you aside. 
 * [Continue] -> fortune
 ->END
 === med_student ===
@@ -160,6 +169,7 @@ He pauses for dramatic effect.
 - else:
     ~audience = 50
 }
+{PlaySound("bark")}
 "Crocs...for...dogs? says David, seemingly stuck. #david-confused
 "Right, you started the first canine fashion empire in the Midwest!" you say, trying to help.
 "Uh, yes...I did. Ever since I was a boy, I thought my pets growing up weren't...stylish enough. And whenever the outside pavement burned their little paws, I knew I had to invent a solution. So I grew up to design Crocs! For dogs!"
@@ -193,6 +203,7 @@ You sneak a quick look at the director, who looks {checkpoint1: pleased as punch
 -> trip
 
 === human ===
+{PlaySound("gasp1")}
 You take a prop stethoscope and listen to Carmella's belly.
 "Great Scott!" you exclaim. "The heartbeat is spelling out in Morse code, V-A-M-P-I-R-E. The baby isn't human!" #doctor-worried
 "No!" cries David. "What do we do, doctor?" #david-worried
@@ -200,6 +211,7 @@ You take a prop stethoscope and listen to Carmella's belly.
 * "There's nothing we can do until it's out of the womb. Then we take him out."
 ->birth_vampire
 === paternity ===
+{PlaySound("gasp2")}
 You look between Carmella's legs.
 "Great Scott, it's starting to crown! But wait, the baby has shockingly red hair while David has brown hair, so according to the rules of genetics, David is NOT THE FATHER!" #doctor-dramatic
 "Impossible!" cries David. "That is my child and the heir to my {industry} empire!" #david-dramatic
@@ -218,6 +230,7 @@ You look between Carmella's legs.
 - else:
     ~audience = 0
 }
+{PlaySound("groan")}
 You take a prop stethoscope and listen to Carmella's belly.
 "Great Scott!" you exclaim. "There are three heartbeats in there! Triplets! How did we miss this? We're going to have to do an emergency C-section."
 The director is waving his arms around at you off to the side. It occurs to you that you don't have a set for a C-section operation. Try that again. #doctor-embarrassed
@@ -229,6 +242,7 @@ The director is waving his arms around at you off to the side. It occurs to you 
 - else:
     ~audience = 0
 }
+{PlaySound("trip")}
 "Great Scoooooott," you exclaim while tripping over a sound cable and faceplanting on the ground. Something came unplugged. #doctor-embarrassed
 "It's starting to *scruncheerrshhh*!" you continue. "But wait, the baby has *brshhheeeeek* while *thwack* has *ayeeeeesshersh*, so according to the rules of genetics, *eeeeeeee* is NOT THE FATHER!"
 "Impossible!" cries David. "That is *screeeeeeeeech* and the heir to *ssshshhhhshhh* empire!" #david-dramatic
@@ -252,6 +266,7 @@ The director is waving his arms around at you off to the side. It occurs to you 
 "You bitch!" screams David. "I'm gonna kill you and your kid."
 * [Continue] -> priscilla_cop
 === carmella_confession ===
+{PlaySound("gasp2")}
 {audience + 5 <=50:
     ~audience = audience + 5
 - else:
@@ -263,6 +278,8 @@ The director is waving his arms around at you off to the side. It occurs to you 
 * [Continue] ->priscilla_cop
 -> END
 === soliloquy ===
+{PlaySound("applause1")}
+{PlaySound("soliloquy")}
 {audience + 10 <=50:
     ~audience = audience + 10
 - else:
@@ -273,6 +290,7 @@ The other three actors are stunned silent for a moment.
 "Uh, while I am surprised he admitted it so early," says Carmella, "Dr. G is right. He is the father." #carmella-neutral
 *[Continue]->fight
 === stage_fright ===
+{PlaySound("groan")}
 {audience - 10 >= 0:
     ~audience = audience - 10
 - else:
@@ -286,11 +304,18 @@ Your co-stars look at you expectantly.
 "Indeed. Carmella? Care to *eeeeeeeeeeeeek*?" you ask Angela pointedly. #doctor-dramatic
 -> END
 === stage_fright_noise ===
+{PlaySound("groan")}
+{audience - 5 >=0:
+    ~audience = audience - 5
+- else:
+    ~audience = 0
+}
 "Um. Uhhhhh. Well. Um. *EEEEEEeeeeeeeeeeeeeeerrrrrrrk." #doctor-embarrrassed
 Someone plugs the cable back in. At least no one could hear you forget acting.
 * You remember how to act again.
 -> carmella_confession
 === fight ===
+{PlaySound("gasp1")}
 "You come into my house, and screw my wife?!" screams David. "I'll make you pay. Fight me you bastard!" #david-angry
 "No!" yells Carmella. "He's right, you hadn't made love to me in months then! You don't care about me, you're a slave to the {industry} industry." #carmella-angry
 "What did you say to me, bitch?" threatens David.
@@ -327,6 +352,7 @@ You walk off the set.
 "Well, darling, now that all those interruptions are gone, I'd love to meet my child, so PUSH Carmella PUSH!" you exclaim. #doctor-dramatic
 ->newborn
 ===newborn_insem===
+{PlaySound("baby_cry")}
 "Wah wah!" cries the newly born infant. #baby
 * "I love to see a happy family," you end. 
 {audience > 25: -> good_end}
@@ -334,6 +360,7 @@ You walk off the set.
 * "Gross." -> gross
 ->END
 === newborn ===
+{PlaySound("baby_cry")}
 "Wah wah!" cries the newly born infant.
 "He's beautiful," croons Carmella. "I still like Jimmy, but he's not a Harrison anymore. What's his new last name?" #carmella-happy
 * "Godfrey." 
@@ -364,12 +391,14 @@ You walk off the set.
 {audience > 25: -> good_end}
 {audience <= 25: -> bad_end}
 === cross ===
+{PlaySound("q-tip")}
 {audience - 10 >=0:
     ~audience = audience - 10
 - else:
     ~audience = 0
 }
 You hold up a cross of Q-tips to Carmella's vagina.
+{PlaySound("unstrap")}
 "Ahhhhhhhhhhhhhh!" screams Angela, who somehow surreptitiously unstraps her pregnancy belly. #carmella-pain
 "No!" cries David. "I never got to know my son. He was replaced by a monster." #david-sad
 "We will mourn him together, dear," says Carmella.
