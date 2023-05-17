@@ -2,22 +2,39 @@
 using UnityEngine.UI;
 using System;
 using Ink.Runtime;
+using Ink.Parsed;
 
 // This is a super bare bones example of how to play and display a ink story in Unity.
 public class BasicInkExample : MonoBehaviour {
-    public static event Action<Story> OnCreateStory;
-	
+    public static event Action<Ink.Runtime.Story> OnCreateStory;
+    private CharacterManager _characterManager;
+	private SoundManager _soundManager;
+
     void Awake () {
-		// Remove the default message
-		RemoveChildren();
+        // Remove the default message
+        _characterManager = FindObjectOfType<CharacterManager>();
+        _soundManager = FindObjectOfType<SoundManager>();
+        RemoveChildren();
 		StartStory();
 	}
 
 	// Creates a new Story object with the compiled story which we can then play!
 	void StartStory () {
-		story = new Story (inkJSONAsset.text);
-        if(OnCreateStory != null) OnCreateStory(story);
-		RefreshView();
+        GameObject background = Instantiate(backgroundPrefab) as GameObject;
+        story = new Ink.Runtime.Story(inkJSONAsset.text);
+        if (OnCreateStory != null) OnCreateStory(story);
+        story.BindExternalFunction("ShowCharacter",
+            (string name, string position, string mood) => _characterManager.ShowCharacter(name, position, mood));
+
+        story.BindExternalFunction("HideCharacter",
+            (string name) => _characterManager.HideCharacter(name));
+
+        story.BindExternalFunction("ChangeMood",
+            (string name, string mood) => _characterManager.ChangeMood(name, mood));
+		story.BindExternalFunction("PlaySound",
+			(string soundname) => _soundManager.PlaySound(soundname));
+
+        RefreshView();
 	}
 	
 	// This is the main function called every time the story changes. It does a few things:
@@ -36,11 +53,18 @@ public class BasicInkExample : MonoBehaviour {
 			// Display the text on screen!
 			CreateContentView(text);
 		}
-
+		//if (story.currentTags.Count > 0)
+		//{
+		//	for (int i = 0; i < story.currentTags.Count; i++)
+		//	{
+		//		string tag = story.currentTags[i];
+		//		Image img = CreatePortraitView(tag);
+		//	}
+		//}
 		// Display all the choices, if there are any!
-		if(story.currentChoices.Count > 0) {
+		if (story.currentChoices.Count > 0) {
 			for (int i = 0; i < story.currentChoices.Count; i++) {
-				Choice choice = story.currentChoices [i];
+                Ink.Runtime.Choice choice = story.currentChoices [i];
 				Button button = CreateChoiceView (choice.text.Trim ());
 				// Tell the button what to do when we press it
 				button.onClick.AddListener (delegate {
@@ -58,26 +82,34 @@ public class BasicInkExample : MonoBehaviour {
 	}
 
 	// When we click the choice button, tell the story to choose that choice!
-	void OnClickChoiceButton (Choice choice) {
+	void OnClickChoiceButton (Ink.Runtime.Choice choice) {
 		story.ChooseChoiceIndex (choice.index);
 		RefreshView();
 	}
 
 	// Creates a textbox showing the the line of text
 	void CreateContentView (string text) {
-		Text storyText = Instantiate (textPrefab) as Text;
+        UnityEngine.UI.Text storyText = Instantiate (textPrefab) as UnityEngine.UI.Text;
 		storyText.text = text;
-		storyText.transform.SetParent (canvas.transform, false);
+		storyText.transform.SetParent (panel1.transform, false);
+
+	}
+	Image CreatePortraitView (string text)
+	{
+		Image portrait = Instantiate(portraitPrefab) as Image;
+		portrait.transform.SetParent(panel2.transform, false);
+		portrait.sprite = Resources.Load<Sprite>(text);
+		return portrait;
 	}
 
 	// Creates a button showing the choice text
 	Button CreateChoiceView (string text) {
 		// Creates the button from a prefab
 		Button choice = Instantiate (buttonPrefab) as Button;
-		choice.transform.SetParent (canvas.transform, false);
-		
-		// Gets the text from the button prefab
-		Text choiceText = choice.GetComponentInChildren<Text> ();
+		choice.transform.SetParent (panel1.transform, false);
+
+        // Gets the text from the button prefab
+        UnityEngine.UI.Text choiceText = choice.GetComponentInChildren<UnityEngine.UI.Text> ();
 		choiceText.text = text;
 
 		// Make the button expand to fit the text
@@ -89,22 +121,34 @@ public class BasicInkExample : MonoBehaviour {
 
 	// Destroys all the children of this gameobject (all the UI)
 	void RemoveChildren () {
-		int childCount = canvas.transform.childCount;
+		int childCount = panel1.transform.childCount;
 		for (int i = childCount - 1; i >= 0; --i) {
-			GameObject.Destroy (canvas.transform.GetChild (i).gameObject);
+			GameObject.Destroy (panel1.transform.GetChild (i).gameObject);
 		}
-	}
+        //int childCount2 = panel2.transform.childCount;
+        //for (int i = childCount2 - 1; i >= 0; --i)
+        //{
+        //    GameObject.Destroy(panel2.transform.GetChild(i).gameObject);
+        //}
+    }
 
 	[SerializeField]
 	private TextAsset inkJSONAsset = null;
-	public Story story;
+	public Ink.Runtime.Story story;
 
 	[SerializeField]
-	private Canvas canvas = null;
+	private GameObject panel1 = null;
+    [SerializeField]
+    private GameObject panel2 = null;
 
-	// UI Prefabs
-	[SerializeField]
-	private Text textPrefab = null;
+
+    // UI Prefabs
+    [SerializeField]
+	private UnityEngine.UI.Text textPrefab = null;
 	[SerializeField]
 	private Button buttonPrefab = null;
+    [SerializeField]
+    private Image portraitPrefab = null;
+    [SerializeField]
+    private GameObject backgroundPrefab = null;
 }
