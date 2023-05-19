@@ -9,11 +9,14 @@ public class BasicInkExample : MonoBehaviour {
     public static event Action<Ink.Runtime.Story> OnCreateStory;
     private CharacterManager _characterManager;
 	private SoundManager _soundManager;
+	public AudioSource _audiosource;
+	private ScoreBar _score;
 
     void Awake () {
         // Remove the default message
         _characterManager = FindObjectOfType<CharacterManager>();
         _soundManager = FindObjectOfType<SoundManager>();
+		_score = FindObjectOfType<ScoreBar>();
         RemoveChildren();
 		StartStory();
 	}
@@ -21,6 +24,7 @@ public class BasicInkExample : MonoBehaviour {
 	// Creates a new Story object with the compiled story which we can then play!
 	void StartStory () {
         GameObject background = Instantiate(backgroundPrefab) as GameObject;
+		_audiosource.Play();
         story = new Ink.Runtime.Story(inkJSONAsset.text);
         if (OnCreateStory != null) OnCreateStory(story);
         story.BindExternalFunction("ShowCharacter",
@@ -33,6 +37,8 @@ public class BasicInkExample : MonoBehaviour {
             (string name, string mood) => _characterManager.ChangeMood(name, mood));
 		story.BindExternalFunction("PlaySound",
 			(string soundname) => _soundManager.PlaySound(soundname));
+        story.BindExternalFunction("UpdateScore",
+            (string points, string direction) => _score.UpdateScoreBar(float.Parse(points), direction));
 
         RefreshView();
 	}
@@ -76,6 +82,10 @@ public class BasicInkExample : MonoBehaviour {
 		else {
 			Button choice = CreateChoiceView("End of story.\nRestart?");
 			choice.onClick.AddListener(delegate{
+				//RemovePortraits();
+				_characterManager.HideCharacter("Doctor");
+				_characterManager.HideCharacter("Director");
+				_score.UpdateScoreBar(50f, "up");
 				StartStory();
 			});
 		}
@@ -94,13 +104,13 @@ public class BasicInkExample : MonoBehaviour {
 		storyText.transform.SetParent (panel1.transform, false);
 
 	}
-	Image CreatePortraitView (string text)
-	{
-		Image portrait = Instantiate(portraitPrefab) as Image;
-		portrait.transform.SetParent(panel2.transform, false);
-		portrait.sprite = Resources.Load<Sprite>(text);
-		return portrait;
-	}
+	//Image CreatePortraitView (string text)
+	//{
+	//	Image portrait = Instantiate(portraitPrefab) as Image;
+	//	portrait.transform.SetParent(panel2.transform, false);
+	//	portrait.sprite = Resources.Load<Sprite>(text);
+	//	return portrait;
+	//}
 
 	// Creates a button showing the choice text
 	Button CreateChoiceView (string text) {
@@ -131,15 +141,24 @@ public class BasicInkExample : MonoBehaviour {
         //    GameObject.Destroy(panel2.transform.GetChild(i).gameObject);
         //}
     }
+	//void RemovePortraits()
+	//{
+ //       int childCount2 = characterManager.transform.childCount;
+ //       for (int i = childCount2 - 1; i >= 0; --i)
+ //       {
+ //          GameObject.Destroy(characterManager.transform.GetChild(i).gameObject);
+ //       }
 
-	[SerializeField]
+ //   }
+
+    [SerializeField]
 	private TextAsset inkJSONAsset = null;
 	public Ink.Runtime.Story story;
 
 	[SerializeField]
 	private GameObject panel1 = null;
     [SerializeField]
-    private GameObject panel2 = null;
+    private GameObject characterManager = null;
 
 
     // UI Prefabs

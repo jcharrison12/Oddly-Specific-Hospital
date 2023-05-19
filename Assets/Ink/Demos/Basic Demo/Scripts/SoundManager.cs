@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public AudioSource _audio;
+    public AudioSource _SFX;
     public List<AudioClip> clips;
     private Dictionary<string, AudioClip> dict;
 
@@ -18,6 +18,6 @@ public class SoundManager : MonoBehaviour
     }
     public void PlaySound(string soundname)
     {
-        _audio.PlayOneShot(dict[soundname], .7f);
+        _SFX.PlayOneShot(dict[soundname], .8f);
     }
 }

@@ -23,6 +23,8 @@ public class CharacterManager : MonoBehaviour
     private CharacterMoods _priscillaMoods;
     [SerializeField]
     private CharacterMoods _directorMoods;
+    [SerializeField]
+    private CharacterMoods _babyMoods;
 
     private void Awake()
     {
@@ -144,6 +146,8 @@ public class CharacterManager : MonoBehaviour
                 return _priscillaMoods;
             case CharacterName.Director:
                 return _directorMoods;
+            case CharacterName.Baby:
+                return _babyMoods;
             default:
                 Debug.LogError($"Could not find moodset for {name}");
                 return null;
