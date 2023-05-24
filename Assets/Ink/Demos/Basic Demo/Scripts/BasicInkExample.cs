@@ -85,7 +85,10 @@ public class BasicInkExample : MonoBehaviour {
 				//RemovePortraits();
 				_characterManager.HideCharacter("Doctor");
 				_characterManager.HideCharacter("Director");
-				_score.UpdateScoreBar(50f, "up");
+                _characterManager.HideCharacter("Carmella");
+                _characterManager.HideCharacter("Priscilla");
+                _characterManager.HideCharacter("David");
+                _score.UpdateScoreBar(50f, "up");
 				StartStory();
 			});
 		}

@@ -13,6 +13,7 @@ public class CharacterMoods : MonoBehaviour
     public Sprite Threatening;
     public Sprite Vampire;
     public Sprite Cop;
+    public Sprite Singing;
 
     public Sprite GetMoodSprite(CharacterMood mood)
     {
@@ -34,6 +35,8 @@ public class CharacterMoods : MonoBehaviour
                 return Vampire ?? Neutral;
             case CharacterMood.Cop:
                 return Cop ?? Neutral;
+            case CharacterMood.Singing:
+                return Singing ?? Neutral;
             default:
                 Debug.Log($"Didn't find Sprite for character: {Name}, mood: {mood}");
                 return Neutral;

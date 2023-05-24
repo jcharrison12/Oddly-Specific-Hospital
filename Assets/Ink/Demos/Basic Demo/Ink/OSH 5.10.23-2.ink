@@ -126,6 +126,7 @@ Maude, an older actress in her 50s, enters the room. She's wearing scrubs. You d
 {UpdateScore(audience, "down")}
 {PlaySound("SFX crickets")}
 {HideCharacter("Carmella")}
+{ChangeMood("Priscilla", "Angry")}
 {ShowCharacter("Doctor", "Right", "Dramatic")}
 "Auntie Evelyn??? I thought you were dead?!" you exclaim.
 Maude has been on this show for a long time and she's aware of your bullsh--I mean  memory problems. Without skipping a beat she says...
@@ -153,6 +154,7 @@ David, whose actor is also named David, pulls you aside.
 ~priscilla_is_nurse = false
 {HideCharacter("Carmella")}
 {ShowCharacter("Doctor", "Right", "Neutral")}
+{ChangeMood("Priscilla", "Happy")}
 Maude was once an improv comedian, so from time to time she likes to play along with your deviations from the script.
 "That's me," Priscilla rasps, clearly a smoker. "I used to be in marketing inventing pyramid schemes, but I wanted a fresh start and a new career so I went to medical school at the ripe old age of 53." #priscilla-happy
 "Whatever, enough of this chatter," barks David. David's actor, coincidentally, is also David. #david-angry
@@ -376,6 +378,7 @@ The director is waving his arms around at you off to the side. It occurs to you 
 }
 {UpdateScore(audience, "up")}
 {HideCharacter("David")}
+{ChangeMood("Doctor", "Dramatic")}
 {HideCharacter("Priscilla")}
 {ShowCharacter("Doctor", "Center", "Dramatic")}
 {ShowCharacter("Carmella", "Left", "Worried")}
@@ -422,6 +425,7 @@ Someone plugs the cable back in. At least no one could hear you forget acting.
 -> carmella_confession
 === fight ===
 {PlaySound("SFX gasp 1")}
+{ChangeMood("Doctor", "Neutral")}
 {ShowCharacter("David", "Center", "Angry")}
 "You come into my house, and screw my wife?!" screams David. "I'll make you pay. Fight me you bastard!" #david-angry
 "No!" yells Carmella. "He's right, you hadn't made love to me in months then! You don't care about me, you're a slave to the {industry} industry." #carmella-angry
@@ -453,6 +457,10 @@ Someone plugs the cable back in. At least no one could hear you forget acting.
 {audience <= 25: -> bad_end}
 * "Gross." -> gross
 === gross ===
+{HideCharacter("Doctor")}
+{HideCharacter("Carmella")}
+{HideCharacter("Priscilla")}
+{HideCharacter("David")}
 {audience - 10 >= 0:
     ~audience = audience - 10
 - else:
@@ -537,7 +545,7 @@ You walk off the set.
     ~audience = 0
 }
 {UpdateScore(audience, "down")}
-{ChangeMood("Carmella", "Angry")}
+{ChangeMood("Carmella", "Dramatic")}
 {ChangeMood("David", "Angry")}
 {ChangeMood("Doctor", "Neutral")}
 You hold up a cross of Q-tips to Carmella's vagina.
@@ -554,6 +562,9 @@ You hold up a cross of Q-tips to Carmella's vagina.
 * [Anti-depressant commercial]
 ->antidepressant
 === good_vampire_musical ===
+{ChangeMood("Doctor", "Singing")}
+{ChangeMood("Carmella", "Singing")}
+{ChangeMood("Priscilla", "Singing")}
 {PlaySound("vox_harmony_for_specific_hospital")}
 {audience + 5 <=50:
     ~audience = audience + 5
@@ -577,7 +588,7 @@ You hold up a cross of Q-tips to Carmella's vagina.
 {HideCharacter("David")}
 {HideCharacter("Carmella")}
 {HideCharacter("Priscilla")}
-{ShowCharacter("Doctor", "Center", "Dramatic")}
+{ShowCharacter("Doctor", "Center", "Singing")}
 "Goodbye, Carmella's baby," you sing with a cracking voice. "We will mourn you all of our days." None of your co-actors join you. #doctor-sad
 * [Continue]
 {audience > 25: -> good_end}
