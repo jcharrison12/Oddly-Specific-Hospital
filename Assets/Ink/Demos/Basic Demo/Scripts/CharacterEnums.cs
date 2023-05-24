@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-    public enum CharacterName { Doctor, David, Carmella, Priscilla, Director };
+    public enum CharacterName { Doctor, David, Carmella, Priscilla, Director, Baby };
     public enum CharacterPosition { Center, Left, Right };
-    public enum CharacterMood { Neutral, Happy, Angry, Worried, Dramatic };
+    public enum CharacterMood { Neutral, Happy, Angry, Worried, Dramatic, Threatening, Vampire, Cop, Singing };
 }
